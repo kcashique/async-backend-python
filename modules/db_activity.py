@@ -9,7 +9,7 @@ class ConnectionHandler:
             logging.error("DB_ERROR(INIT) : "+str(err))
     async def initialize_pool(self):
         try:
-            self.pool= await asyncpg.create_pool(host='127.0.0.1',port=5432,user='gu_nex',password='gunex123',database='nexpay',max_size=20)
+            self.pool= await asyncpg.create_pool(host='127.0.0.1',port=5432,user='postgres',password='army5',database='test1',max_size=20)
         except Exception as err:
             logging.error('DB_ERROR(INIT_POOL) : '+str(err))            
     async def execute_read(self, query, params):
