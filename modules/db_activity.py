@@ -9,9 +9,24 @@ class ConnectionHandler:
             logging.error("DB_ERROR(INIT) : "+str(err))
     async def initialize_pool(self):
         try:
-            self.pool= await asyncpg.create_pool(host='127.0.0.1',port=5432,user='postgres',password='army5',database='test1',max_size=20)
+            self.pool= await asyncpg.create_pool(host='127.0.0.1',port=5432,user='krib_user',password='krib_123',database='krib_testdb',max_size=20)
         except Exception as err:
             logging.error('DB_ERROR(INIT_POOL) : '+str(err))            
+   
+    async def create_user_table():
+            async with self.pool.acquire() as conn:                
+                async with connection.transaction():
+                    # Create the user table
+                    await connection.execute('''
+                        CREATE TABLE IF NOT EXISTS user_master (
+                            id SERIAL PRIMARY KEY,
+                            username TEXT UNIQUE NOT NULL,
+                            email TEXT UNIQUE NOT NULL,
+                            password TEXT NOT NULL
+                        );
+                    ''')
+   
+   
     async def execute_read(self, query, params):
         data=[]
         try:
