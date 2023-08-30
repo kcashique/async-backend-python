@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from modules.authentication import auth
+from modules.posts import post
+
 
 app=FastAPI(debug=True)
 app.include_router(auth.router)
+app.include_router(post.router)
 
 # @application.middleware('http')
 # async def inject_db_obj(request: Request, call_next):

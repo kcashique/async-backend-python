@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+
 from modules.db_activity import ConnectionHandler
 from modules.dependencies import fetch_db_conn, fetch_mongo_conn
 from motor.motor_asyncio import AsyncIOMotorClient
