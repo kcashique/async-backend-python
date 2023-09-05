@@ -39,5 +39,30 @@ async def create_post(post_info: Post, db_conn: ConnectionHandler = Depends(fetc
 
 async def insert_post_record_mongo(post_info: Post, mgc: AsyncIOMotorClient):
     db=mgc['krib_api']
-    await db.users.insert_one({'title':post_info.title,'description':post_info.description})
+    await db.post.insert_one({'title':post_info.title,'description':post_info.description})
     mgc.close()
+
+
+@router.get(path='/read_posts',tags=['posts'])
+async def read_post(mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
+    resp = {'status': 'failed', 'data': 'Error occurred'}
+
+    try:
+        db = mgc['krib_api']
+        data = await db.post.find().to_list(None)
+
+        if data:
+            resp["status"] = "success"
+            resp["data"] = data
+        else:
+            resp["data"] = "No data available"
+
+    except Exception as err:
+        logging.error('API_ERROR(AUTH_AU): ' + str(err))
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+    finally:
+        mgc.close()
+
+    return resp
+                     
