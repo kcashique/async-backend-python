@@ -49,7 +49,12 @@ async def read_post(mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
 
     try:
         db = mgc['krib_api']
-        data = await db.post.find().to_list(None)
+        cursor = db.post.find({}, {"_id": 0, "title": 1, "description": 1})  # Project only title and description
+
+        data = []
+        async for document in cursor:
+            data.append(document)
+
 
         if data:
             resp["status"] = "success"
