@@ -13,8 +13,8 @@ class ConnectionHandler:
         except Exception as err:
             logging.error('DB_ERROR(INIT_POOL) : '+str(err))            
    
-   
-    async def execute_read(self, query):
+
+    async def execute_read(self, query):    # removed params in execute_read function
         data=[]
         try:
             async with self.pool.acquire() as conn:                
