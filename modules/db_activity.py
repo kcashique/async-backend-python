@@ -14,11 +14,11 @@ class ConnectionHandler:
             logging.error('DB_ERROR(INIT_POOL) : '+str(err))            
    
    
-    async def execute_read(self, query, params):
+    async def execute_read(self, query):
         data=[]
         try:
             async with self.pool.acquire() as conn:                
-                result= await conn.fetch(query, params)
+                result= await conn.fetch(query)
                 for row in result:
                     data.append(row)
                 await self.pool.release(conn)
