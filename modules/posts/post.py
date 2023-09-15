@@ -104,7 +104,7 @@ async def read_post(db_conn: ConnectionHandler = Depends(fetch_db_conn), mgc: As
     resp = {'status': 'failed', 'data': 'Error occurred'}
 
     try:
-        result = await db_conn.execute_read_listgit ('SELECT p.title, p.description, u.username as created_by FROM post p JOIN user_master u ON p.created_by = u.user_id;')
+        result = await db_conn.execute_read_list('SELECT p.title, p.description, u.username as created_by FROM post p JOIN user_master u ON p.created_by = u.user_id;')
 
         if result:
             # Convert the result to a list of Post Pydantic models
