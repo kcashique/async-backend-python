@@ -14,7 +14,7 @@ class ConnectionHandler:
             logging.error('DB_ERROR(INIT_POOL) : '+str(err))            
    
 
-    async def execute_read(self, query):    # removed params in execute_read function
+    async def execute_read(self, query, params):
         data=[]
         try:
             async with self.pool.acquire() as conn:                
@@ -26,6 +26,7 @@ class ConnectionHandler:
             logging.error("DB_ERROR(ER) : "+str(err))
         finally:
             return data
+         
             
     async def execute_write(self, query, params):
         data=0
@@ -41,16 +42,16 @@ class ConnectionHandler:
             return data
         
 
-    # async def create_table(self, query):
-    #     async def create_table_with_query(self, query):
-    #         resp={'status':'failed','message':'Error occurred'}    
-    #         try:
-    #             async with self.pool.acquire() as conn:
-    #                 await conn.execute(query)
-    #                 resp['status']='success'
-    #                 resp['message']='Table created'
-    #         except Exception as err:
-    #             logging.error("DB_ERROR(ER) : " + str(err))
-    #         finally:
-    #             return resp
+    async def execute_read_list(self, query):    # removed params in execute_read function
+        data=[]
+        try:
+            async with self.pool.acquire() as conn:                
+                result= await conn.fetch(query)
+                for row in result:
+                    data.append(row)
+                await self.pool.release(conn)
+        except Exception as err:
+            logging.error("DB_ERROR(ER) : "+str(err))
+        finally:
+            return data
             
