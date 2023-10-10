@@ -79,6 +79,16 @@ class PostCreate(BaseModel):
 
 @router.post(path='/create_post',tags=['posts'])
 async def create_post(post_info: PostCreate, db_conn: ConnectionHandler = Depends(fetch_db_conn), mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
+    """
+    Create new post.
+
+    Args:
+        postinfo (PostCreate): title and description with user.
+
+    Returns:
+        dict: A message indicating successful post create.
+    """
+
     resp={'status':'failed','message':'Error occurred'}
     try:
         task1=asyncio.create_task(db_conn.execute_write('insert into post(title,description, created_by)values($1,$2,$3) returning post_id;',(post_info.title,post_info.description, post_info.created_by)))
@@ -101,6 +111,15 @@ async def insert_post_record_mongo(post_info: Post, mgc: AsyncIOMotorClient):
 
 @router.get(path='/read_posts',tags=['posts'])
 async def read_post(db_conn: ConnectionHandler = Depends(fetch_db_conn), mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
+    """
+    Get a list of Posts.
+
+    Args:
+        nothing.
+
+    Returns:
+        dict: A list of posts.
+    """
     resp = {'status': 'failed', 'data': 'Error occurred'}
 
     try:

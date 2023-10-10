@@ -8,14 +8,23 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
 import logging, uuid
 
-router = APIRouter(prefix='/user',tags=['user'])
+router = APIRouter(prefix='/user',tags=['users'])
 
 class UserAuth(BaseModel):
     username: str
     password: str
 
-@router.post(path='/auth',tags=['user'])
+@router.post(path='/auth',tags=['users'])
 async def authenticate_user(auth_info: UserAuth, mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
+    """
+    Authenticate and log in a user.
+
+    Args:
+        credentials (Credentials): User login credentials.
+
+    Returns:
+        dict: A message indicating successful login.
+    """
     resp={'status':'failed','message':'Error occurred'}    
     try:
         db=mgc['krib_api']            
@@ -37,8 +46,19 @@ async def authenticate_user(auth_info: UserAuth, mgc: AsyncIOMotorClient = Depen
         mgc.close()
         return resp
 
-@router.post(path='/register',tags=['user'])
+@router.post(path='/register',tags=['users'])
 async def register_user(auth_info: UserAuth, db_conn: ConnectionHandler = Depends(fetch_db_conn), mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
+    """
+    Register a new user. we can add 
+    description here like this
+
+    Args:
+        user (User): User registration details.
+
+    Returns:
+        dict: A message indicating successful registration.
+    """
+
     resp={'status':'failed','message':'Error occurred'}
     try:
         task1=asyncio.create_task(db_conn.execute_write('insert into user_master(username,password,email)values($1,$2,$3) returning user_id;',(auth_info.username,auth_info.password,'cmubeenali@gmail.com')))
