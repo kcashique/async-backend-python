@@ -13,8 +13,8 @@ router = APIRouter(prefix='/user',tags=['users'])
 class UserAuth(BaseModel):
     username: str
     password: str
-
-@router.post(path='/auth',tags=['users'])
+# we can add summary for endpoint title and description for endpoint description
+@router.post(path='/auth',tags=['users'], summary="Login endpoint", description="Please insert your login credentials")
 async def authenticate_user(auth_info: UserAuth, mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
     """
     Authenticate and log in a user.
@@ -46,7 +46,7 @@ async def authenticate_user(auth_info: UserAuth, mgc: AsyncIOMotorClient = Depen
         mgc.close()
         return resp
 
-@router.post(path='/register',tags=['users'])
+@router.post(path='/register',tags=['users'], summary="Register New User", description="Endpoint for registering new user")
 async def register_user(auth_info: UserAuth, db_conn: ConnectionHandler = Depends(fetch_db_conn), mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
     """
     Register a new user. we can add 

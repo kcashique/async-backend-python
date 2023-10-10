@@ -77,7 +77,7 @@ class PostCreate(BaseModel):
     description: str
     created_by : int
 
-@router.post(path='/create_post',tags=['posts'])
+@router.post(path='/create_post',tags=['posts'], summary="Create your New post", description="Endpoint for creating new post")
 async def create_post(post_info: PostCreate, db_conn: ConnectionHandler = Depends(fetch_db_conn), mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
     """
     Create new post.
@@ -108,8 +108,8 @@ async def insert_post_record_mongo(post_info: Post, mgc: AsyncIOMotorClient):
     await db.post.insert_one({'title':post_info.title,'description':post_info.description, 'created_by':post_info.created_by})
     mgc.close()
 
-
-@router.get(path='/read_posts',tags=['posts'])
+# another method to add descrption to the endpoint
+@router.get(path='/read_posts',tags=['posts'], summary="List of Posts", description="This endpoint will display all the avialble posts")
 async def read_post(db_conn: ConnectionHandler = Depends(fetch_db_conn), mgc: AsyncIOMotorClient = Depends(fetch_mongo_conn)):
     """
     Get a list of Posts.
